@@ -1,0 +1,28 @@
+version: '1.0'
+
+services:
+  db: 
+    image: mongo
+    container_name: mongo_db
+    expose:
+      - 27017
+    ports:
+      - 27017:27017
+
+  backend:
+    depends_on:
+      - db
+    container_name: backend
+    image: back-end-exemplo
+
+    build:
+      context: .
+      dockerfile: docker/dockerfile/backend.dockerfile
+
+    ports:
+      - 5006:5006
+      
+
+
+
+
