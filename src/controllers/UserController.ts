@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import User from "../schemas/User";
+import UserService from '../services/users/service'
 
 class UserController {
   public async index(req: Request, res: Response): Promise<Response> {
@@ -7,12 +7,15 @@ class UserController {
     return res.json(users);
   }
 
-  public async create(req: Request, res: Response): Promise<Response>{
-    
-    const user = await User.create(req.body)
-    console.log('--->',user)
+  public async create(req: Request, res: Response): Promise<Response> {
+    const { email, firstName, lastName } = req.body;
 
-    return res.json(user)
+    if (email == "" || firstName == "" || lastName == "") {
+      return res.status(400).send({ message: "Vai dar para criar o user não" });
+    }
+
+    UserService.create({ email, firstName, lastName });
+    return res.status(201).send({ data: user });
   }
 }
 
