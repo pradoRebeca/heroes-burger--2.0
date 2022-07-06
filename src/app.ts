@@ -19,14 +19,16 @@ class App {
   }
 
   private listen(): void{
-    this.express.listen(process.env.PORT, () =>
-      console.log(`Server ativo na porta ${process.env.PORT}`)
+    const port = process.env.PORT || 5006
+    this.express.listen(port, () =>
+      console.log(`Server ativo na porta ${port}`)
     );
   }
 
   private database(): void {
+    const stringConnection = process.env.CONNECTION_DB || "mongodb://localhost:27017/database"
     mongoose
-      .connect("mongodb://db:27017/database")
+      .connect(stringConnection)
       .then((result) => {
         console.log("MongoDB Conectado ");
       })

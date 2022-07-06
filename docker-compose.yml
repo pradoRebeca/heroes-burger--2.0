@@ -20,6 +20,8 @@ services:
       dockerfile: docker/dockerfile/backend.dockerfile
     expose:
       - 5006
+    environment:
+      CONNECTION_DB: mongodb://db:27017/database
     ports:
       - 5006:5006
       
