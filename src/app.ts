@@ -27,6 +27,8 @@ class App {
 
   private database(): void {
     const stringConnection = process.env.CONNECTION_DB || "mongodb://localhost:27017/database"
+    console.log('stringConnection =>',stringConnection)
+
     mongoose
       .connect(stringConnection)
       .then((result) => {
