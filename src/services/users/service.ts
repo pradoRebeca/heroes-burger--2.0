@@ -1,30 +1,40 @@
-import User from "../../schemas/User";
-import { objectError, buildErrorObject } from "../../utils/utils";
+import User, { UserType } from "../../schemas/User";
+import { objectResponse } from "../../utils/utils";
 
-class UserService{
-  public async createUser(data: object): Promise<objectError | object> {
-    const errorResponse = buildErrorObject("Não foi possível criar o usuário");
-    const createResponse = await User.create(data)
-      .then((result) => result)
-      .catch((error) => errorResponse);
+class UserService {
+  public async createUser(obj: UserType): Promise<objectResponse> {
+    const createResponse = await User.create(obj)
+      .then((result) => ({ response: result }))
+      .catch((error) => ({ error: error, response: error }));
 
     return createResponse;
   }
 
-  public async findUser(name: string): Promise<object | objectError> {
-    const errorResponse = buildErrorObject("Não foi possível pegar os dados");
-    const findResponse = await User.find({ name })
-      .then((result) => result)
-      .catch((error) => errorResponse);
+  public async findUser(username: string): Promise<objectResponse> {
+    const findResponse = await User.find({ username })
+      .then((result) => ({ response: result }))
+      .catch((error) => ({ error: error, response: error }));
     return findResponse;
   }
 
-  public async deleteUser(name: string): Promise<object | objectError> {
-    const errorResponse = buildErrorObject("Não foi possível deletar usuário");
+  public async deleteUser(name: string): Promise<objectResponse> {
     const deleteResponse = await User.deleteOne({ name })
-      .then((result) => result)
-      .catch((error) => errorResponse);
+      .then((result) => ({ response: result }))
+      .catch((error) => ({ error: error, response: error }));
     return deleteResponse;
+  }
+
+  public async updateUser(obj: UserType): Promise<objectResponse> {
+    const { name } = obj;
+
+    const filter = { name: name };
+    const update = obj;
+
+    const updateResponse = await User.updateOne(filter, update)
+      .then((result) => ({ response: result }))
+      .catch((error) => ({ error: error, response: error }));
+
+    return updateResponse;
   }
 }
 
