@@ -1,8 +1,7 @@
-POST  http://localhost:5006/user
+POST  http://localhost:5006/v1/user
 Content-Type: application/json
 
 {
-    "email": "pessoa@gmail.com",
-    "firstname": "pessoa",
-    "lastName": "fernando"
+    "name": "prado",
+    "password": "123"
 }
