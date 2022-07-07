@@ -1,11 +1,12 @@
 import { Response, Request } from "express";
-import UserService from "../services/users/service";
+import UserService from "../services/UserService";
 import { buildErrorObject, existErrorObject } from "../utils/utils";
 
 class UserController {
   public async find(req: Request, res: Response): Promise<Response> {
     const username = req.query.username as string;
-    const {response,error} = await UserService.findUser(username);
+    const id = req.headers["id"] as string;
+    const {response,error} = await UserService.findUser(id, username);
     if (!error) {
       return res.status(200).send(response);
     }
@@ -40,7 +41,11 @@ class UserController {
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {
+    const id = req.headers["id"] as string;
     const { name } = req.body;
+
+    if(!id)
+      return res.status(401).send({message: "sem id"});
 
     const {error} = await UserService.deleteUser(name);
 
@@ -55,6 +60,10 @@ class UserController {
 
   public async update(req: Request, res: Response): Promise<Response> {
     const { name, username, password } = req.body;
+    const id = req.headers["id"] as string;
+
+    if(!id)
+      return res.status(401).send({message: "sem id"});
 
     const {response, error} = await UserService.updateUser({
       name,
