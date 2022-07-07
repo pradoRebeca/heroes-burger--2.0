@@ -1,5 +1,5 @@
-import User, { UserType } from "../../schemas/User";
-import { objectResponse } from "../../utils/utils";
+import User, { UserType } from "../schemas/User";
+import { objectResponse } from "../utils/utils";
 
 class UserService {
   public async createUser(obj: UserType): Promise<objectResponse> {
@@ -10,8 +10,9 @@ class UserService {
     return createResponse;
   }
 
-  public async findUser(username: string): Promise<objectResponse> {
-    const findResponse = await User.find({ username })
+  public async findUser(id:string, username?: string): Promise<objectResponse> {
+    const findQuery = {$or : [{_id: id},{ username}]}
+    const findResponse = await User.find(findQuery)
       .then((result) => ({ response: result }))
       .catch((error) => ({ error: error, response: error }));
     return findResponse;
