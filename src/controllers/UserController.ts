@@ -4,51 +4,71 @@ import { buildErrorObject, existErrorObject } from "../utils/utils";
 
 class UserController {
   public async find(req: Request, res: Response): Promise<Response> {
-    // const {name} = req.query
-    const name = "prado";
-    const responseService = await UserService.findUser(name);
-
-    if (!existErrorObject(responseService)) {
-      console.info(responseService);
-      return res.status(200).send(responseService);
+    const username = req.query.username as string;
+    const {response,error} = await UserService.findUser(username);
+    if (!error) {
+      return res.status(200).send(response);
     }
 
-    console.error(responseService);
-    return res.status(400).send(responseService);
+    console.error(error);
+    const errorResponse = buildErrorObject("Não foi possível criar o usuário");
+    return res.status(400).send(errorResponse);
+  
   }
 
   public async create(req: Request, res: Response): Promise<Response> {
-    const { name, password } = req.body;
+    const { name, password, username } = req.body;
 
-    if (!name || !password) {
+    if (!name || !password || !username) {
       const errorResponse = buildErrorObject("Campos invalidos");
       return res.status(400).send(errorResponse);
     }
 
-    const responseService = await UserService.createUser({
+    const { response, error } = await UserService.createUser({
       name,
+      username,
       password,
     });
 
-    if (!existErrorObject(responseService)) {
-      console.info(responseService);
-      return res.status(201).send(responseService);
+    if (!error) {
+      return res.status(201).send(response);
     }
 
-    console.error(responseService);
-    return res.status(400).send(responseService);
+    console.error(error);
+    const errorResponse = buildErrorObject("Não foi possível criar o usuário");
+    return res.status(400).send(errorResponse);
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {
     const { name } = req.body;
 
-    const responseService = await UserService.deleteUser(name);
+    const {error} = await UserService.deleteUser(name);
 
-    if (!existErrorObject(responseService)) {
-      return res.status(200).send(responseService);
+    if (!error) {
+      return res.status(200).send({message: "Usuário deletado"});
     }
 
-    return res.status(200).send(responseService);
+    console.error(error);
+    const errorResponse = buildErrorObject("Não foi possível deletar o usuário");
+    return res.status(400).send(errorResponse);
+  }
+
+  public async update(req: Request, res: Response): Promise<Response> {
+    const { name, username, password } = req.body;
+
+    const {response, error} = await UserService.updateUser({
+      name,
+      username,
+      password,
+    });
+
+    if (!error) {
+      return res.status(200).send(response);
+    }
+
+    console.error(error);
+    const errorResponse = buildErrorObject("Não foi possível atualizar os dados do usuário");
+    return res.status(400).send(errorResponse);
   }
 }
 
