@@ -6,8 +6,8 @@ class CategoryController {
   public async create(req: Request, res: Response): Promise<Response> {
     const { name } = req.body;
 
-    if(!name){
-      return res.status(400).send({message: 'Campos obrigatórios'});
+    if (!name) {
+      return res.status(400).send({ message: "Campos obrigatórios" });
     }
 
     const { response, error } = await CategoryService.createCategory({ name });
@@ -20,6 +20,12 @@ class CategoryController {
   }
 
   public async find(req: Request, res: Response): Promise<Response> {
+    const id = req.headers["id"] as string;
+
+    if (!id) {
+      return res.status(401).send({ message: "sem id" });
+    }
+
     const { response, error } = await CategoryService.findCategory();
 
     if (!error) return res.status(200).send(response);
@@ -35,7 +41,7 @@ class CategoryController {
     const id = req.headers["id"] as string;
 
     if (!id) {
-      return res.status(400).send({ message: "é necessario ter id" });
+      return res.status(401).send({ message: "sem id" });
     }
 
     const { response, error } = await CategoryService.deleteCategory(id);
@@ -50,7 +56,7 @@ class CategoryController {
     const id = req.headers["id"] as string;
 
     if (!id) {
-      return res.status(400).send({ message: "é necessario ter id" });
+      return res.status(401).send({ message: "sem id" });
     }
 
     const { name } = req.body;
