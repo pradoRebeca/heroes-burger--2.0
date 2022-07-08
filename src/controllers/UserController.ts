@@ -1,12 +1,12 @@
 import { Response, Request } from "express";
 import UserService from "../services/UserService";
-import { buildErrorObject, existErrorObject } from "../utils/utils";
+import { buildErrorObject } from "../utils/utils";
 
 class UserController {
   public async find(req: Request, res: Response): Promise<Response> {
     const username = req.query.username as string;
     const id = req.headers["id"] as string;
-    const {response,error} = await UserService.findUser(id, username);
+    const { response, error } = await UserService.findUser(id, username);
     if (!error) {
       return res.status(200).send(response);
     }
@@ -14,7 +14,6 @@ class UserController {
     console.error(error);
     const errorResponse = buildErrorObject("Não foi possível criar o usuário");
     return res.status(400).send(errorResponse);
-  
   }
 
   public async create(req: Request, res: Response): Promise<Response> {
@@ -44,17 +43,18 @@ class UserController {
     const id = req.headers["id"] as string;
     const { name } = req.body;
 
-    if(!id)
-      return res.status(401).send({message: "sem id"});
+    if (!id) return res.status(401).send({ message: "sem id" });
 
-    const {error} = await UserService.deleteUser(name);
+    const { error } = await UserService.deleteUser(name);
 
     if (!error) {
-      return res.status(200).send({message: "Usuário deletado"});
+      return res.status(200).send({ message: "Usuário deletado" });
     }
 
     console.error(error);
-    const errorResponse = buildErrorObject("Não foi possível deletar o usuário");
+    const errorResponse = buildErrorObject(
+      "Não foi possível deletar o usuário"
+    );
     return res.status(400).send(errorResponse);
   }
 
@@ -62,10 +62,9 @@ class UserController {
     const { name, username, password } = req.body;
     const id = req.headers["id"] as string;
 
-    if(!id)
-      return res.status(401).send({message: "sem id"});
+    if (!id) return res.status(401).send({ message: "sem id" });
 
-    const {response, error} = await UserService.updateUser({
+    const { response, error } = await UserService.updateUser({
       name,
       username,
       password,
@@ -76,7 +75,9 @@ class UserController {
     }
 
     console.error(error);
-    const errorResponse = buildErrorObject("Não foi possível atualizar os dados do usuário");
+    const errorResponse = buildErrorObject(
+      "Não foi possível atualizar os dados do usuário"
+    );
     return res.status(400).send(errorResponse);
   }
 }
