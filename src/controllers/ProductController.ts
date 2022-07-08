@@ -7,7 +7,7 @@ class ProductController {
     const { name, description, price, promotionalPercentage, image, category } =
       req.body;
 
-    if (!name || !description || !price || !category)
+    if (!name || !description || !price || !category )
       return res.status(400).send({ message: "Campos não preenchidos" });
 
     const product = {
@@ -40,6 +40,18 @@ class ProductController {
       "Não possível pegar todas os produtos"
     );
     console.log("response service =>", response);
+    return res.status(400).send(errorResponse);
+  }
+
+  public async findPromotions(req: Request, res: Response): Promise<Response> {
+    const { response, error } = await ProductService.findPromotions();
+
+    if (!error) return res.status(200).send(response);
+
+    const errorResponse = buildErrorObject(
+      "Não possível pegar os produtos em promoções"
+    );
+
     return res.status(400).send(errorResponse);
   }
 

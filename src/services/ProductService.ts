@@ -42,6 +42,12 @@ class ProductService {
       .then((result) => ({ response: result }))
       .catch((error) => ({ error: true, response: error }));
   }
+
+  public async findPromotions(): Promise<objectResponse> {
+    return await Product.find({ promotionalPercentage: { $exists: true } })
+      .then((result) => ({ response: result }))
+      .catch((error) => ({ error: true, response: error }));
+  }
 }
 
 export default new ProductService();
