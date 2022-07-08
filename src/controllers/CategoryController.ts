@@ -22,9 +22,9 @@ class CategoryController {
   public async find(req: Request, res: Response): Promise<Response> {
     const id = req.headers["id"] as string;
 
-    if (!id) {
-      return res.status(401).send({ message: "sem id" });
-    }
+    // if (!id) {
+    //   return res.status(401).send({ message: "sem id" });
+    // }
 
     const { response, error } = await CategoryService.findCategory();
 
