@@ -18,5 +18,8 @@ routes.put('/v1/category', CategoryController.update)
 routes.post('/v1/product', ProductController.create)
 routes.get('/v1/product', ProductController.findAll)
 routes.get('/v1/product/oneProduct', ProductController.findOne)
+routes.get('/v1/product/promotions', ProductController.findPromotions)
+routes.delete('/v1/product', ProductController.delete)
+routes.put('/v1/product', ProductController.update)
 
 export default routes
