@@ -6,7 +6,7 @@ export type objectError = {
 
 export type objectResponse = {
   error?: boolean;
-  response?: Array<object> | object | string;
+  response: Array<object> | object | string;
 };
 
 export function buildErrorObject(message: string, log?: any): objectError {
