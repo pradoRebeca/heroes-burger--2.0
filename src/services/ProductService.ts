@@ -10,6 +10,7 @@ class ProductService {
 
   public async findAllProducts(): Promise<objectResponse> {
     return await Product.find()
+      .populate("category")
       .then((result) => ({ response: result }))
       .catch((error) => ({ error: true, response: error }));
   }
@@ -18,6 +19,26 @@ class ProductService {
     const idProduct = { _id: id };
 
     return await Product.find(idProduct)
+      .populate("category")
+      .then((result) => ({ response: result }))
+      .catch((error) => ({ error: true, response: error }));
+  }
+
+  public async deleteProduct(id: string): Promise<objectResponse> {
+    const idProduct = { _id: id };
+
+    return await Product.deleteOne(idProduct)
+      .then((result) => ({ response: result }))
+      .catch((error) => ({ error: true, response: error }));
+  }
+
+  public async updateProduct(
+    id: string,
+    data: object
+  ): Promise<objectResponse> {
+    const idProduct = { _id: id };
+
+    return await Product.updateOne(idProduct, data)
       .then((result) => ({ response: result }))
       .catch((error) => ({ error: true, response: error }));
   }

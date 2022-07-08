@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { request, Request, Response } from "express";
 import ProductService from "../services/ProductService";
 import { buildErrorObject } from "../utils/utils";
 
@@ -7,7 +7,7 @@ class ProductController {
     const { name, description, price, promotionalPercentage, image, category } =
       req.body;
 
-    if (!name || !description || !price)
+    if (!name || !description || !price || !category)
       return res.status(400).send({ message: "Campos não preenchidos" });
 
     const product = {
@@ -39,7 +39,7 @@ class ProductController {
     const errorResponse = buildErrorObject(
       "Não possível pegar todas os produtos"
     );
-
+    console.log("response service =>", response);
     return res.status(400).send(errorResponse);
   }
 
@@ -53,8 +53,52 @@ class ProductController {
     const errorResponse = buildErrorObject(
       "Não possível pegar dados do produto"
     );
-
+    console.log("response service =>", response);
     return res.status(400).send(errorResponse);
+  }
+
+  public async delete(req: Request, res: Response): Promise<Response> {
+    const id = req.headers["id"] as string;
+
+    const { response, error } = await ProductService.deleteProduct(id);
+
+    if (!error) return res.status(200).send(response);
+
+    const errorResponse = buildErrorObject(
+      "Não possível deletar os dados do produto"
+    );
+
+    console.log("response service =>", response);
+    return res.status(400).send(errorResponse);
+  }
+
+  public async update(req: Request, res: Response): Promise<Response> {
+    const id = req.headers["id"] as string;
+    const { name, description, price, promotionalPercentage, image, category } =
+      req.body;
+
+    if (!name || !description || !price)
+      return res.status(400).send({ message: "Campos não preenchidos" });
+
+    const product = {
+      name,
+      description,
+      price,
+      promotionalPercentage,
+      image,
+      category,
+    };
+
+    const { response, error } = await ProductService.updateProduct(id, product);
+
+    if (error) {
+      console.log(response);
+      return res
+        .status(400)
+        .send({ message: "não foi possível atualizar o produto" });
+    }
+
+    return res.status(200).send(response);
   }
 }
 
