@@ -10,8 +10,11 @@ class UserService {
     return createResponse;
   }
 
-  public async findUser(id:string, username?: string): Promise<objectResponse> {
-    const findQuery = {$or : [{_id: id},{ username}]}
+  public async findUser(
+    id: string,
+    username?: string
+  ): Promise<objectResponse> {
+    const findQuery = { $or: [{ _id: id }, { username }] };
     const findResponse = await User.find(findQuery)
       .then((result) => ({ response: result }))
       .catch((error) => ({ error: error, response: error }));
@@ -36,6 +39,17 @@ class UserService {
       .catch((error) => ({ error: error, response: error }));
 
     return updateResponse;
+  }
+
+  public async verifyUser(
+    username: string,
+    password: string
+  ): Promise<objectResponse> {
+    const query = { username, password };
+
+    return await User.find(query)
+      .then((result) => ({ response: result }))
+      .catch((error) => ({ error: true, response: error }));
   }
 }
 
