@@ -1,18 +1,19 @@
-import { Request, response, Response } from "express";
+import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { UserType } from "../schemas/User";
 import UserService from "../services/UserService";
 import { objectResponse } from "../utils/utils";
 
 class AuthController {
-  private jsonWebToken(username: string): objectResponse {
+  public async jsonWebToken(username: string): Promise<objectResponse> {
     const SECRET = "private";
 
     try {
       const token = "abc";
-      //   jwt.sign({ username: username }, SECRET, {
-      //     expiresIn: 200,
-      //   });
-      console.log(token);
+      jwt.sign({ username: username }, SECRET, {
+        expiresIn: 200,
+      });
+
       return { response: token };
     } catch (error) {
       return { error: true, response: error };
@@ -31,20 +32,26 @@ class AuthController {
     );
 
     if (error) {
-      console.log(response);
+      console.log();
       return res
         .status(400)
         .send({ message: "não foi possivel fazer a autenticação" });
     }
 
-    const token = this.jsonWebToken(username);
-    console.log(token);
-    if (token.error)
-      return res
-        .status(400)
-        .send({ message: "não foi possivel fazer o token" });
+    // const token = await this.jsonWebToken(username);
+    // console.log(token);
+    // if (token.error)
+    //   return res
+    //     .status(400)
+    //     .send({ message: "não foi possivel fazer o token" });
 
-    return res.status(200).send(token.response);
+    const lengthUser = response as Array<object>;
+
+    if (lengthUser.length == 0) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    return res.status(200);
   }
 }
 
