@@ -12,9 +12,9 @@ const ProductSchema = new Schema({
   name: { type: String, require: true, index: { unique: true } },
   description: { type: String, require: true },
   price: { type: Number, require: true },
-  category: [{ type: Schema.Types.ObjectId, ref: 'Category', required: true}],
+  category: [{ type: Schema.Types.ObjectId, ref: "Category", required: true }],
   promotionalPercentage: Number,
-  image: String
+  image: String,
 });
 
 export default model<ProductInterface>("Product", ProductSchema);
