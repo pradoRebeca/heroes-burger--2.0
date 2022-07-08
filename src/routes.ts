@@ -1,4 +1,5 @@
 import  Router  from "express";
+import AuthController from "./controllers/AuthController";
 import CategoryController from "./controllers/CategoryController";
 import ProductController from "./controllers/ProductController";
 import UserController from "./controllers/UserController";
@@ -21,5 +22,8 @@ routes.get('/v1/product/oneProduct', ProductController.findOne)
 routes.get('/v1/product/promotions', ProductController.findPromotions)
 routes.delete('/v1/product', ProductController.delete)
 routes.put('/v1/product', ProductController.update)
+
+routes.post('/v1/user/auth', AuthController.login)
+
 
 export default routes
