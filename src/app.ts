@@ -1,16 +1,20 @@
 import express, { application } from "express";
 import cors from "cors";
 import mongoose, { mongo } from "mongoose";
-import routes from "./routes";
+import routes from "./router/routes";
+import routesAuth from "./router/routesAuth";
+import AuthController from "./controllers/AuthController";
 
 class App {
   public express: express.Application;
 
   constructor() {
     this.express = express();
-    this.middlewares()
-    this.database()
-    this.listen()
+    this.middlewares();
+    this.database();
+    this.authenticate()
+    this.routes();
+    this.listen();
   }
 
   private middlewares(): void {
@@ -18,16 +22,17 @@ class App {
     this.express.use(cors());
   }
 
-  private listen(): void{
-    const port = process.env.PORT || 5006
+  private listen(): void {
+    const port = process.env.PORT || 5006;
     this.express.listen(port, () =>
       console.log(`Server ativo na porta ${port}`)
     );
   }
 
   private database(): void {
-    const stringConnection = process.env.CONNECTION_DB || "mongodb://localhost:27017/database"
-    console.log('stringConnection =>',stringConnection)
+    const stringConnection =
+      process.env.CONNECTION_DB || "mongodb://localhost:27017/database";
+    console.log("stringConnection =>", stringConnection);
 
     mongoose
       .connect(stringConnection)
@@ -39,9 +44,15 @@ class App {
       });
   }
 
-  public routes(): void{
-    this.express.use(routes)
+  public authenticate(): void {
+    this.express.use(routesAuth);
+  }
+
+  public routes(): void {
+    this.express.use(AuthController.verifyJWT);
+    this.express.use(routes);
+    
   }
 }
 
-export default new App
+export default new App();
