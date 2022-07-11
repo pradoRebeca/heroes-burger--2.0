@@ -5,14 +5,21 @@ import { buildErrorObject } from "../utils/utils";
 class UserController {
   public async find(req: Request, res: Response): Promise<Response> {
     const username = req.query.username as string;
-    const id = req.headers["id"] as string;
+    const id = req.userId;
+    console.log("username =>", username, "id=>", id);
     const { response, error } = await UserService.findUser(id, username);
+    console.log(response);
     if (!error) {
-      return res.status(200).send(response);
+      const responseLength = response as Array<object>;
+
+      if (responseLength.length > 0) {
+        return res.status(200).send(response);
+      }
+      return res.status(404).send({ message: "Not Found" });
     }
 
     console.error(error);
-    const errorResponse = buildErrorObject("Não foi possível criar o usuário");
+    const errorResponse = buildErrorObject("Não foi possível  o usuário");
     return res.status(400).send(errorResponse);
   }
 
