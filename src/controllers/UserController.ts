@@ -6,9 +6,9 @@ class UserController {
   public async find(req: Request, res: Response): Promise<Response> {
     const username = req.query.username as string;
     const id = req.userId;
-    console.log("username =>", username, "id=>", id);
+
     const { response, error } = await UserService.findUser(id, username);
-    console.log(response);
+
     if (!error) {
       const responseLength = response as Array<object>;
 
@@ -47,12 +47,11 @@ class UserController {
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {
-    const id = req.headers["id"] as string;
-    const { name } = req.body;
+    const id = req.userId;
 
-    if (!id) return res.status(401).send({ message: "sem id" });
+    if (!id) return res.status(401).send({ message: "user ID required" });
 
-    const { error } = await UserService.deleteUser(name);
+    const { error } = await UserService.deleteUser(id);
 
     if (!error) {
       return res.status(200).send({ message: "Usuário deletado" });
@@ -67,15 +66,18 @@ class UserController {
 
   public async update(req: Request, res: Response): Promise<Response> {
     const { name, username, password } = req.body;
-    const id = req.headers["id"] as string;
+    const id = req.userId;
 
-    if (!id) return res.status(401).send({ message: "sem id" });
+    if (!id) return res.status(400).send({ message: "user ID required" });
 
-    const { response, error } = await UserService.updateUser({
-      name,
-      username,
-      password,
-    });
+    const { response, error } = await UserService.updateUser(
+      {
+        name,
+        username,
+        password,
+      },
+      id
+    );
 
     if (!error) {
       return res.status(200).send(response);
