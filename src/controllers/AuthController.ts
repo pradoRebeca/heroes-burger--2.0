@@ -11,8 +11,6 @@ interface tokenPayload {
 }
 
 class AuthController {
-
-
   public async verifyJWT(
     req: Request,
     res: Response,
@@ -20,8 +18,7 @@ class AuthController {
   ): Promise<Response | void> {
     const token = req.headers["x-access-token"] as string;
     try {
-      const {id} = jwt.verify(token, "private") as tokenPayload;
-      // console.log("id usuario =>", data);
+      const { id } = jwt.verify(token, "private") as tokenPayload;
       req.userId = id;
       return next();
     } catch (error) {
@@ -56,7 +53,7 @@ class AuthController {
       const { _id } = lengthUser[0] as UserType;
 
       const token = jwt.sign({ id: _id }, "private", {
-        expiresIn: 200,
+        expiresIn: '1d',
       });
 
       return res.status(200).send({ token });
