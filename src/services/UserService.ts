@@ -1,5 +1,6 @@
 import User, { UserType } from "../schemas/User";
 import { objectResponse } from "../utils/utils";
+import { isObjectIdOrHexString, ObjectId, ObjectIdExpression} from "mongoose";
 
 class UserService {
   public async createUser(obj: UserType): Promise<objectResponse> {
@@ -14,6 +15,7 @@ class UserService {
     id: string,
     username?: string
   ): Promise<objectResponse> {
+  
     const findQuery = { $or: [{ _id: id }, { username }] };
     const findResponse = await User.find(findQuery)
       .then((result) => ({ response: result }))
