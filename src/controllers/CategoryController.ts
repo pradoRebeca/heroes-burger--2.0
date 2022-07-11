@@ -6,9 +6,7 @@ class CategoryController {
   public async create(req: Request, res: Response): Promise<Response> {
     const { name } = req.body;
 
-    if (!name) {
-      return res.status(400).send({ message: "Campos obrigatórios" });
-    }
+    if (!name) return res.status(400).send({ message: "Campos obrigatórios" });
 
     const { response, error } = await CategoryService.createCategory({ name });
 
@@ -34,9 +32,7 @@ class CategoryController {
   public async delete(req: Request, res: Response): Promise<Response> {
     const id = req.query.id as string;
 
-    if (!id) {
-      return res.status(401).send({ message: "category ID required" });
-    }
+    if (!id) return res.status(401).send({ message: "category ID required" });
 
     const { response, error } = await CategoryService.deleteCategory(id);
 
@@ -49,9 +45,7 @@ class CategoryController {
   public async update(req: Request, res: Response): Promise<Response> {
     const id = req.query.id as string;
 
-    if (!id) {
-      return res.status(401).send({ message: "category ID required" });
-    }
+    if (!id) return res.status(401).send({ message: "category ID required" });
 
     const { name } = req.body;
     const { response, error } = await CategoryService.updateCategory(id, name);
