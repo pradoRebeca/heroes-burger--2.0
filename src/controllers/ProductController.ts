@@ -1,4 +1,5 @@
 import { request, Request, Response } from "express";
+import CategoryService from "../services/CategoryService";
 import ProductService from "../services/ProductService";
 import { buildErrorObject } from "../utils/utils";
 
@@ -10,23 +11,28 @@ class ProductController {
     if (!name || !description || !price || !category)
       return res.status(400).send({ message: "Campos não preenchidos" });
 
+    const categoryService = await CategoryService.findOneCategory(category);
+
+    if (categoryService.error)
+      return res
+      .status(404)
+      .send({ message: "Alguma categoria não existe" });
+
     const product = {
       name,
       description,
       price,
       promotionalPercentage,
       image,
-      category,
+      category: [...new Set(category)],
     };
 
     const { response, error } = await ProductService.createProduct(product);
 
-    if (error) {
-      console.log(response);
+    if (error)
       return res
         .status(400)
         .send({ message: "não foi possível criar o produto" });
-    }
 
     return res.status(201).send(response);
   }
@@ -65,7 +71,7 @@ class ProductController {
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {
-    const id = req.headers["id"] as string;
+    const id = req.query.id as string;
 
     const { response, error } = await ProductService.deleteProduct(id);
 
@@ -80,11 +86,11 @@ class ProductController {
   }
 
   public async update(req: Request, res: Response): Promise<Response> {
-    const id = req.headers["id"] as string;
+    const id = req.query.id as string;
     const { name, description, price, promotionalPercentage, image, category } =
       req.body;
 
-    if (!name || !description || !price)
+    if (!name || !description || !price || !category)
       return res.status(400).send({ message: "Campos não preenchidos" });
 
     const product = {

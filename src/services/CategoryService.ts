@@ -18,6 +18,15 @@ class CategoryService {
     return responseFind;
   }
 
+  public async findOneCategory(ids: Array<string>): Promise<objectResponse> {
+    const query = { '_id': { $all: ids } }
+    const responseFind = await Category.find(query)
+      .then((result) => ({ response: result }))
+      .catch((error) => ({ error: true, response: error }));
+
+    return responseFind;
+  }
+
   public async deleteCategory(id: string): Promise<objectResponse> {
     const deleteToId = { _id: id };
     const responseDelete = await Category.deleteOne(deleteToId)
