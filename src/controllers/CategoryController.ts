@@ -20,12 +20,6 @@ class CategoryController {
   }
 
   public async find(req: Request, res: Response): Promise<Response> {
-    const id = req.headers["id"] as string;
-
-    // if (!id) {
-    //   return res.status(401).send({ message: "sem id" });
-    // }
-
     const { response, error } = await CategoryService.findCategory();
 
     if (!error) return res.status(200).send(response);
@@ -38,10 +32,10 @@ class CategoryController {
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {
-    const id = req.headers["id"] as string;
+    const id = req.query.id as string;
 
     if (!id) {
-      return res.status(401).send({ message: "sem id" });
+      return res.status(401).send({ message: "category ID required" });
     }
 
     const { response, error } = await CategoryService.deleteCategory(id);
@@ -53,10 +47,10 @@ class CategoryController {
     return res.status(400).send(errorResponse);
   }
   public async update(req: Request, res: Response): Promise<Response> {
-    const id = req.headers["id"] as string;
+    const id = req.query.id as string;
 
     if (!id) {
-      return res.status(401).send({ message: "sem id" });
+      return res.status(401).send({ message: "category ID required" });
     }
 
     const { name } = req.body;
