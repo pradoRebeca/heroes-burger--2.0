@@ -17,3 +17,11 @@ export function buildErrorObject(message: string, log?: any): objectError {
     message: message,
   };
 }
+
+declare global {
+  namespace Express {
+    interface Request {
+      userId: string;
+    }
+  }
+}
