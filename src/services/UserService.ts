@@ -23,17 +23,16 @@ class UserService {
     return findResponse;
   }
 
-  public async deleteUser(name: string): Promise<objectResponse> {
-    const deleteResponse = await User.deleteOne({ name })
+  public async deleteUser(id: string): Promise<objectResponse> {
+    const query = {_id: id}
+    const deleteResponse = await User.deleteOne(query)
       .then((result) => ({ response: result }))
       .catch((error) => ({ error: error, response: error }));
     return deleteResponse;
   }
 
-  public async updateUser(obj: UserType): Promise<objectResponse> {
-    const { name } = obj;
-
-    const filter = { name: name };
+  public async updateUser(obj: UserType, id: string): Promise<objectResponse> {
+    const filter = {_id: id}
     const update = obj;
 
     const updateResponse = await User.updateOne(filter, update)
