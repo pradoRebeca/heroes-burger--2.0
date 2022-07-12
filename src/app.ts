@@ -1,8 +1,8 @@
-import express, { application } from "express";
+import express from "express";
 import cors from "cors";
-import mongoose, { mongo } from "mongoose";
-import routes from "./router/routes";
-import routesAuth from "./router/routesAuth";
+import mongoose from "mongoose";
+import routes from "./router/routesWithoutAuth";
+import routesAuth from "./router/routesWithAuth";
 import AuthController from "./controllers/AuthController";
 
 class App {
@@ -12,7 +12,6 @@ class App {
     this.express = express();
     this.middlewares();
     this.database();
-    this.authenticate()
     this.routes();
     this.listen();
   }
@@ -37,21 +36,17 @@ class App {
     mongoose
       .connect(stringConnection)
       .then((result) => {
-        console.log("MongoDB Conectado ");
+        console.log("MongoDB Conectado");
       })
       .catch((error) => {
         console.log(error);
       });
   }
 
-  public authenticate(): void {
-    this.express.use(routesAuth);
-  }
-
   public routes(): void {
+    this.express.use(routesAuth);
     this.express.use(AuthController.verifyJWT);
     this.express.use(routes);
-    
   }
 }
 
