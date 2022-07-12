@@ -1,5 +1,4 @@
 import Router from "express";
-import AuthController from "../controllers/AuthController";
 import CategoryController from "../controllers/CategoryController";
 import ProductController from "../controllers/ProductController";
 import UserController from "../controllers/UserController";
