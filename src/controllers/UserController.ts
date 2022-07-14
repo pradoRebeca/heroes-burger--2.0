@@ -49,8 +49,9 @@ class UserController {
   public async delete(req: Request, res: Response): Promise<Response> {
     const id = req.userId;
 
-    if (!id) return res.status(401).send({ message: "user ID required" });
-
+    if (!id) {
+      return res.status(401).send({ message: "user ID required" });
+    }
     const { error } = await UserService.deleteUser(id);
 
     if (!error) {
@@ -68,8 +69,9 @@ class UserController {
     const { name, username, password } = req.body;
     const id = req.userId;
 
-    if (!id) return res.status(400).send({ message: "user ID required" });
-
+    if (!id) {
+      return res.status(400).send({ message: "user ID required" });
+    }
     const { response, error } = await UserService.updateUser(
       {
         name,

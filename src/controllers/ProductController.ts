@@ -1,4 +1,4 @@
-import { request, Request, Response } from "express";
+import { Request, Response } from "express";
 import CategoryService from "../services/CategoryService";
 import ProductService from "../services/ProductService";
 import { buildErrorObject } from "../utils/utils";
@@ -14,9 +14,7 @@ class ProductController {
     const categoryService = await CategoryService.findOneCategory(category);
 
     if (categoryService.error)
-      return res
-      .status(404)
-      .send({ message: "Alguma categoria não existe" });
+      return res.status(404).send({ message: "Alguma categoria não existe" });
 
     const product = {
       name,
@@ -29,11 +27,11 @@ class ProductController {
 
     const { response, error } = await ProductService.createProduct(product);
 
-    if (error)
+    if (error) {
       return res
         .status(400)
         .send({ message: "não foi possível criar o produto" });
-
+    }
     return res.status(201).send(response);
   }
 
@@ -61,8 +59,9 @@ class ProductController {
   public async findPromotions(req: Request, res: Response): Promise<Response> {
     const { response, error } = await ProductService.findPromotions();
 
-    if (!error) return res.status(200).send(response);
-
+    if (!error) {
+      return res.status(200).send(response);
+    }
     const errorResponse = buildErrorObject(
       "Não possível pegar os produtos em promoções"
     );
@@ -75,8 +74,9 @@ class ProductController {
 
     const { response, error } = await ProductService.deleteProduct(id);
 
-    if (!error) return res.status(200).send(response);
-
+    if (!error) {
+      return res.status(200).send(response);
+    }
     const errorResponse = buildErrorObject(
       "Não possível deletar os dados do produto"
     );
