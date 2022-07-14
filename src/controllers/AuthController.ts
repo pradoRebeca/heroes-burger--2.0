@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { UserType } from "../schemas/User";
+import { readFileSync } from "fs";
 import UserService from "../services/UserService";
 
 interface tokenPayload {
@@ -26,7 +27,13 @@ class AuthController {
     }
   }
 
+  public jwt() {
+    console.log("função chamada");
+  }
+
   public async login(req: Request, res: Response): Promise<Response> {
+    const PRIVATE_KEY = readFileSync("./config/private.key").toString();
+
     const { username, password } = req.body;
 
     if (!username || !password)
@@ -51,9 +58,7 @@ class AuthController {
     try {
       const { _id } = lengthUser[0] as UserType;
 
-      const token = jwt.sign({ id: _id }, "private", {
-        expiresIn: "1d",
-      });
+      const token = jwt.sign({ id: _id }, PRIVATE_KEY);
 
       return res.status(200).send({ token });
     } catch (error) {
